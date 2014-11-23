@@ -705,28 +705,20 @@ class G(object):
             fig = plt.figure()
             ax = fig.gca(projection='3d')
             ax.set_aspect('equal')
+
+            last_color = self.position_history[0][3]
+            start_index = 0
+            for i in range(len(self.position_history)):
+                if (self.position_history[i][3] != last_color or 
+                    i == len(self.position_history)-1) and i:
+                    X = history[start_index:i, 0]
+                    Y = history[start_index:i, 1]
+                    Z = history[start_index:i, 2]
+                    ax.plot(X, Y, Z, color=last_color)
+                    last_color = self.position_history[i][3]
+                    start_index = i-1
+
             X, Y, Z = history[:, 0], history[:, 1], history[:, 2]
-
-            # From SO answer http://stackoverflow.com/questions/26949445/get-the-ranges-for-repeated-values-in-a-python-list
-            from collections import defaultdict
-            points = defaultdict(list) # will have a list of points per color
-
-            for i in range(len(X)):
-                color = self.position_history[i][3]
-                if len(points[color])==0:
-                    points[color].append([]) # for the X coords
-                    points[color].append([]) # for the Y coords
-                    points[color].append([]) # for the Z coords
-                points[color][0].append(X[i])
-                points[color][1].append(Y[i])
-                points[color][2].append(Z[i])
-
-            # now points['red'] has all the red points 
-
-            for color in points.keys():
-                pts = points[color]
-                ax.plot(pts[0],pts[1],pts[2], 
-                    color=color)
 
             # Hack to keep 3D plot's aspect ratio square. See SO answer:
             # http://stackoverflow.com/questions/13685386
