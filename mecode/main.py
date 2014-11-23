@@ -141,7 +141,8 @@ class G(object):
         self._current_position = defaultdict(float)
         self.is_relative = True
 
-        self.position_history = [(0, 0, 0)]
+        self.current_color = 'blue'
+        self.position_history = [(0, 0, 0, self.current_color)]
         self.speed = 0
         self.speed_history = []
 
@@ -696,7 +697,7 @@ class G(object):
 
         """
         import numpy as np
-        history = np.array(self.position_history)
+        history = np.array([(i[0], i[1], i[2]) for i in self.position_history])
 
         if backend == 'matplotlib':
             from mpl_toolkits.mplot3d import Axes3D
@@ -705,7 +706,27 @@ class G(object):
             ax = fig.gca(projection='3d')
             ax.set_aspect('equal')
             X, Y, Z = history[:, 0], history[:, 1], history[:, 2]
-            ax.plot(X, Y, Z)
+
+            # From SO answer http://stackoverflow.com/questions/26949445/get-the-ranges-for-repeated-values-in-a-python-list
+            from collections import defaultdict
+            points = defaultdict(list) # will have a list of points per color
+
+            for i in range(len(X)):
+                color = self.position_history[i][3]
+                if len(points[color])==0:
+                    points[color].append([]) # for the X coords
+                    points[color].append([]) # for the Y coords
+                    points[color].append([]) # for the Z coords
+                points[color][0].append(X[i])
+                points[color][1].append(Y[i])
+                points[color][2].append(Z[i])
+
+            # now points['red'] has all the red points 
+
+            for color in points.keys():
+                pts = points[color]
+                ax.plot(pts[0],pts[1],pts[2], 
+                    color=color)
 
             # Hack to keep 3D plot's aspect ratio square. See SO answer:
             # http://stackoverflow.com/questions/13685386
@@ -831,7 +852,7 @@ class G(object):
         y = self._current_position['y']
         z = self._current_position['z']
         
-        self.position_history.append((x, y, z))
+        self.position_history.append((x, y, z, self.current_color))
 
         len_history = len(self.position_history)
         if (len(self.speed_history) == 0
