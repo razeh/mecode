@@ -537,8 +537,8 @@ class G(object):
 
         actual_spacing = self.meander_spacing(minor, spacing)
         if abs(actual_spacing) != spacing:
-            msg = ';WARNING! meander spacing updated from {} to {}'
-            self.write(msg.format(spacing, actual_spacing))
+            msg = 'WARNING! meander spacing updated from {} to {}'.format(spacing, actual_spacing)
+            self.write_comment(msg)
         spacing = actual_spacing
         sign = 1
 
@@ -851,3 +851,8 @@ class G(object):
             or self.speed_history[-1][1] != self.speed):
             self.speed_history.append((len_history - 1, self.speed))
 
+    def write_comment(self, msg):
+        def splitEveryN(n, it):
+            return [it[i:i+n] for i in range(0, len(it), n)]
+        for m in splitEveryN(50, msg):
+            self.write(";" + m)
