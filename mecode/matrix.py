@@ -44,9 +44,12 @@ class GMatrix(G):
                                          self.current_position["y"],
                                          self.current_position["z"]))
 
-    def restore_position(self):
+    def restore_position(self, z_height=0):
         return_position = self.position_savepoints.pop()
-        self.abs_move(return_position[0], return_position[1], return_position[2])
+
+        self.abs_move(z=z_height)
+        self.abs_move(return_position[0], return_position[1])
+        self.abs_move(z=return_position[2])
 
 
     # Matrix manipulation #####################################################        
