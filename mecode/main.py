@@ -854,5 +854,5 @@ class G(object):
     def write_comment(self, msg):
         def splitEveryN(n, it):
             return [it[i:i+n] for i in range(0, len(it), n)]
-        for m in splitEveryN(50, msg):
+        for m in splitEveryN(49, msg):
             self.write(";" + m)
