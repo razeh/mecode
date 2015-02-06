@@ -712,9 +712,9 @@ class G(object):
             for i in range(len(self.position_history)):
                 if (self.position_history[i][3] != last_color or 
                     i == len(self.position_history)-1) and i:
-                    X = history[start_index:i, 0]
-                    Y = history[start_index:i, 1]
-                    Z = history[start_index:i, 2]
+                    X = history[start_index:i+1, 0]
+                    Y = history[start_index:i+1, 1]
+                    Z = history[start_index:i+1, 2]
                     ax.plot(X, Y, Z, color=last_color, 
                             linestyle='-',
                             linewidth=self.bit_size,
@@ -722,7 +722,7 @@ class G(object):
                             markersize=self.bit_size,
                             solid_capstyle='round')
                     last_color = self.position_history[i][3]
-                    start_index = i-1
+                    start_index = i
 
             X, Y, Z = history[:, 0], history[:, 1], history[:, 2]
 
