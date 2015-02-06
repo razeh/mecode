@@ -142,6 +142,7 @@ class G(object):
         self.is_relative = True
 
         self.current_color = 'blue'
+        self.bit_size = 3.175
         self.position_history = [(0, 0, 0, self.current_color)]
         self.speed = 0
         self.speed_history = []
@@ -714,7 +715,12 @@ class G(object):
                     X = history[start_index:i, 0]
                     Y = history[start_index:i, 1]
                     Z = history[start_index:i, 2]
-                    ax.plot(X, Y, Z, color=last_color)
+                    ax.plot(X, Y, Z, color=last_color, 
+                            linestyle='-',
+                            linewidth=self.bit_size,
+                            marker='o',
+                            markersize=self.bit_size,
+                            solid_capstyle='round')
                     last_color = self.position_history[i][3]
                     start_index = i-1
 
